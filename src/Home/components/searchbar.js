@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField } from '@mui/material';
 import pokemons from '../../Common/pokemons.json';
-import ListPokemon from './List/ListPokemon'; // Importer le composant ListPokemon
+import ListPokemon from './List/ListPokemon';
 
-const SearchComponent = () => {
-    const [language, setLanguage] = useState('fr'); // Langue par défaut
-    const [filteredPokemons, setFilteredPokemons] = useState(pokemons); // Liste filtrée des pokémons
-    const [searchTerm, setSearchTerm] = useState(''); // Terme de recherche
+const SearchComponent = ({ language }) => {
+    const [filteredPokemons, setFilteredPokemons] = useState(pokemons);
+    const [searchTerm, setSearchTerm] = useState('');
 
-    // Filtre les pokémons en fonction du texte de recherche et de la langue sélectionnée
     useEffect(() => {
         const filtered = pokemons.filter((pokemon) =>
-            pokemon.names[language]?.toLowerCase().includes(searchTerm.toLowerCase()) // Comparaison insensible à la casse
+            pokemon.names[language]?.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredPokemons(filtered);
     }, [searchTerm, language]);
 
     const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value); // Mettre à jour le texte de recherche
+        setSearchTerm(event.target.value);
     };
 
     return (
@@ -30,21 +28,19 @@ const SearchComponent = () => {
                 variant="outlined"
                 sx={{
                     '& input': {
-                        color: 'white', // Couleur du texte
+                        color: 'white',
                     },
                     '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgb(87,90,96)', // Couleur de la bordure par défaut
+                        borderColor: 'rgb(87,90,96)',
                     },
                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'white', // Couleur de la bordure au survol
+                        borderColor: 'white',
                     },
                     '& .MuiInputLabel-root': {
-                        color: 'white', // Couleur de l'étiquette
+                        color: 'white',
                     },
                 }}
             />
-
-
             <ListPokemon filteredPokemons={filteredPokemons} language={language} />
         </Box>
     );

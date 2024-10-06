@@ -2,11 +2,17 @@ import { Box, GlobalStyles } from '@mui/material';
 import './App.css';
 import Header from './Common/Header/header';
 import Home from './Home';
+import { useState } from 'react';
 
 function App() {
-  return (
+  const [currentLanguage, setCurrentLanguage] = useState('fr'); // Gérer la langue dans App
 
-     <>
+  const handleLanguageChange = (newLanguage) => {
+    setCurrentLanguage(newLanguage); // Mettre à jour la langue
+  };
+
+  return (
+    <>
       <GlobalStyles
         styles={{
           body: {
@@ -18,8 +24,9 @@ function App() {
         }}
       />
       <Box>
-        <Header />
-        <Home />
+        {/* On passe currentLanguage et handleLanguageChange à Header et Home  */}
+        <Header currentLanguage={currentLanguage} onLanguageChange={handleLanguageChange} />
+        <Home currentLanguage={currentLanguage} />
       </Box>
     </>
   );

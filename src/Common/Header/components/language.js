@@ -4,14 +4,13 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import pokemons from '../../pokemons.json';
 
-export default function SelectLanguage({currentLanguage, onLanguageChange}) {
+const SelectLanguage = ({currentLanguage, onLanguageChange}) => {
     const [availableLanguages, setAvailableLanguages] = useState([]);
     const desiredLanguage = ['fr', 'en', 'de', 'es', 'ja'];
 
     useEffect(() => {
         // Extraire les langues disponibles à partir de pokemons.json
-        const languagesSet = new Set();
-    
+        const languagesSet = new Set(); // permet de ne pas avoir de doublons
         pokemons.forEach((pokemon) => {
             Object.keys(pokemon.names).forEach((lang) => {
                 if (desiredLanguage.includes(lang)) {
@@ -27,7 +26,7 @@ export default function SelectLanguage({currentLanguage, onLanguageChange}) {
     }, []);
 
     const handleChange = (event) => {
-        setAvailableLanguages(event.target.value);
+        onLanguageChange(event.target.value);
     };
 
     return (
@@ -81,3 +80,5 @@ export default function SelectLanguage({currentLanguage, onLanguageChange}) {
         </div>
     );
 }
+
+export default SelectLanguage;
