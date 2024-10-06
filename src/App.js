@@ -1,24 +1,27 @@
-import logo from './logo.svg';
+import { Box, GlobalStyles } from '@mui/material';
 import './App.css';
+import Header from './Common/Header/header';
+import Home from './Home';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+     <>
+      <GlobalStyles
+        styles={{
+          body: {
+            backgroundColor: 'rgb(40,44,52)', 
+            margin: 0, 
+            padding: 0,
+            height: '100%',
+          },
+        }}
+      />
+      <Box>
+        <Header />
+        <Home />
+      </Box>
+    </>
   );
 }
 
