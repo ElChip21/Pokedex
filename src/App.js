@@ -5,7 +5,7 @@ import Home from './Home';
 import { useState } from 'react';
 
 function App() {
-  const [currentLanguage, setCurrentLanguage] = useState('fr'); // Gérer la langue dans App
+  const [currentLanguage, setCurrentLanguage] = useState('fr'); // Gérer la langue dans App directement
 
   const handleLanguageChange = (newLanguage) => {
     setCurrentLanguage(newLanguage); // Mettre à jour la langue

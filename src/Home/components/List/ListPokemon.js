@@ -17,7 +17,7 @@ const ListPokemon = ({ filteredPokemons, language }) => {
         
         return (
           <Box 
-            key={index} 
+            key={pokemon.id} 
             sx={{ 
               display: 'flex', 
               flexDirection: 'column',
