@@ -1,28 +1,38 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
-import Badge from './badge';
+import React, { useState } from 'react'
+import { Box, Typography } from '@mui/material'
+import Badge from './badge'
+import { useLocalContext } from '../../Common/Context/LocalContext'
 
-const Card = ({ types, name, image, typesData, currentLanguage, identifier }) => {
+const Card = ({ types, name, image, typesData, identifier }) => {
+  const { currentLanguage } = useLocalContext()
+
+  // State pour le chargement de l'image
+  const [isLoading, setIsLoading] = useState(true)
+
+  const handleImageLoaded = () => {
+    setIsLoading(false)
+  }
+
   return (
-    <Box 
-      sx={{ 
-        width: 220, 
-        height: 200, 
+    <Box
+      sx={{
+        width: 220,
+        height: 200,
         ml: '14px',
         mt: '14px',
-        borderRadius: 5, 
+        borderRadius: 5,
         boxShadow: 1,
-        display: 'flex', 
+        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: 'white',
         position: 'relative',
       }}
     >
-      <Typography 
+      <Typography
         variant="caption"
         color="text.secondary"
-        sx={{ 
+        sx={{
           padding: '2px 4px',
           position: 'absolute',
           top: '10px',
@@ -34,40 +44,55 @@ const Card = ({ types, name, image, typesData, currentLanguage, identifier }) =>
         {identifier}
       </Typography>
 
-
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
         <Typography color="text.primary" fontSize={'20px'}>
           {name}
         </Typography>
-        
-        <Box
-          component="img"
-          src={image}
-          alt={name}
-          sx={{
-            width: 100,
-            height: 100,
-            borderRadius: '50%',
-          }}
-        />
 
-        <Box 
-          sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
-        >
-          {types.map(type => {
-            const typeInfo = typesData[type]; // Obtenir les informations sur le type
+        <Box sx={{ position: 'relative', width: 100, height: 100 }}>
+          {isLoading && (
+            <Box
+              component="img"
+              src="/pokeball.jpg"
+              alt="loading"
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 100,
+                height: 100,
+              }}
+            />
+          )}
+          <Box
+            component="img"
+            src={image}
+            onLoad={handleImageLoaded}
+            alt={name}
+            sx={{
+              width: 100,
+              height: 100,
+              borderRadius: '50%',
+            }}
+          />
+        </Box>
+
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {types.map((type) => {
+            const typeInfo = typesData[type]
             return (
-              <Badge 
-                key={type} 
+              <Badge
+                key={type}
                 label={typeInfo.translations[currentLanguage]}
                 color={typeInfo.backgroundColor}
               />
-            );
+            )
           })}
         </Box>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card

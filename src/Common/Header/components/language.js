@@ -3,13 +3,15 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import pokemons from '../../pokemons.json';
+import {useLocalContext} from '../../Context/LocalContext';
 
-const SelectLanguage = ({currentLanguage, onLanguageChange}) => {
+const SelectLanguage = () => {
     const [availableLanguages, setAvailableLanguages] = useState([]);
     const desiredLanguage = ['fr', 'en', 'de', 'es', 'ja'];
 
+    const {currentLanguage, handleLanguageChange} = useLocalContext();
+
     useEffect(() => {
-        // Extraire les langues disponibles à partir de pokemons.json
         const languagesSet = new Set(); // permet de ne pas avoir de doublons
         pokemons.forEach((pokemon) => {
             Object.keys(pokemon.names).forEach((lang) => {
@@ -26,7 +28,7 @@ const SelectLanguage = ({currentLanguage, onLanguageChange}) => {
     }, []);
 
     const handleChange = (event) => {
-        onLanguageChange(event.target.value);
+        handleLanguageChange(event.target.value);
     };
 
     return (

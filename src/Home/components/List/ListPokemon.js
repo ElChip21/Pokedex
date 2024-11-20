@@ -1,42 +1,47 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material'; // Importer Typography pour afficher le texte
-import types from '../../../Common/types.json';
-import Card from '../card';
+import React from 'react'
+import { Box, Typography } from '@mui/material'
+import types from '../../../Common/types.json'
+import { Link } from 'react-router-dom'
+import Card from '../card'
+import { useLocalContext } from '../../../Common/Context/LocalContext'
 
-const ListPokemon = ({ filteredPokemons, language }) => {
+const ListPokemon = ({ filteredPokemons }) => {
+  const { currentLanguage } = useLocalContext()
+
   return (
-    <Box 
-      sx={{ 
+    <Box
+      sx={{
         display: 'flex',
         flexWrap: 'wrap',
       }}
     >
-      {filteredPokemons.map((pokemon, index) => {
+      {filteredPokemons.map((pokemon) => {
         // Formater l'index
-        const formattedIndex = `No.${(pokemon.id).toString().padStart(3, '0')}`;
-        
+        const formattedIndex = `No.${pokemon.id.toString().padStart(3, '0')}`
+
         return (
-          <Box 
-            key={pokemon.id} 
-            sx={{ 
-              display: 'flex', 
+          <Box
+            key={pokemon.id}
+            sx={{
+              display: 'flex',
               flexDirection: 'column',
             }}
-          >          
-            {/* Passer les informations nécessaires au composant Card */}
-            <Card
-              types={pokemon.types}
-              name={pokemon.names[language]} 
-              image={pokemon.image} 
-              typesData={types} 
-              currentLanguage={language}
-              identifier={formattedIndex}
-            />
+          >
+            <Link to={`/pokemon/${pokemon.id}`} style={{ textDecoration: 'none' }}>
+              <Card
+                types={pokemon.types}
+                name={pokemon.names[currentLanguage]}
+                image={pokemon.image}
+                typesData={types}
+                currentLanguage={currentLanguage}
+                identifier={formattedIndex}
+              />
+            </Link>
           </Box>
-        );
+        )
       })}
     </Box>
-  );
-};
+  )
+}
 
-export default ListPokemon;
+export default ListPokemon

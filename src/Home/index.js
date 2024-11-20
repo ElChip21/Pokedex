@@ -1,10 +1,10 @@
 import React from "react";
-import SearchComponent from "./components/searchbar";
+import SearchComponent from "./components/searchComponent";
 
-const Home = ({ currentLanguage }) => { // Recevoir la langue ici
+const Home = () => {
     return (
         <div>
-            <SearchComponent language={currentLanguage} /> {/* Passer la langue au composant */}
+            <SearchComponent />
         </div>
     );
 };
