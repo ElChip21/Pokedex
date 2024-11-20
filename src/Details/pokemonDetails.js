@@ -1,17 +1,65 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Typography, Card, CardContent, CardMedia, Divider, Chip, Button } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import Badge from '../Home/components/badge'
 import { useLocalContext } from '../Common/Context/LocalContext'
-import pokemons from '../Common/pokemons.json'
-import types from '../Common/types.json'
 
 const PokemonDetail = () => {
   const { id } = useParams()
   const { currentLanguage } = useLocalContext()
+  const [pokemon, setPokemon] = useState(null)
+  const [types, setTypes] = useState({})
   const [showMoves, setShowMoves] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const pokemon = pokemons.find((pokemon) => pokemon.id === parseInt(id, 10))
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        // Récupérer les Pokémon et les types depuis APIs
+        const [pokemonResponse, typesResponse] = await Promise.all([
+          fetch('https://pokedex-jgabriele.vercel.app/pokemons.json'),
+          fetch('https://pokedex-jgabriele.vercel.app/types.json'),
+        ])
+
+        const pokemonData = await pokemonResponse.json()
+        const typesData = await typesResponse.json()
+
+        // Chercher le Pokémon spécifique par ID
+        const foundPokemon = pokemonData.find((pokemon) => pokemon.id === parseInt(id, 10))
+        setPokemon(foundPokemon)
+        setTypes(typesData)
+      } catch (err) {
+        console.error('Erreur lors du chargement des données:', err)
+        setError('Impossible de charger les données.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [id]) // La dépendance sur 'id' permet de recharger les données si l'ID change
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Typography variant="h4" color="primary">
+          Chargement...
+        </Typography>
+      </Box>
+    )
+  }
+
+  if (error) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Typography variant="h4" color="error">
+          {error}
+        </Typography>
+      </Box>
+    )
+  }
 
   if (!pokemon) {
     return (
@@ -38,12 +86,7 @@ const PokemonDetail = () => {
   }
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-    >
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
       <Card sx={{ width: 650, boxShadow: 3, borderRadius: 5 }}>
         <CardMedia
           component="img"
@@ -91,18 +134,25 @@ const PokemonDetail = () => {
           <Box mt={3} textAlign="center">
             <Button
               variant="contained"
-              color="primary"
+              color="default"
               size="large"
               onClick={() => setShowMoves((prev) => !prev)}
               sx={{
                 textTransform: 'none',
-                borderRadius: 3,
+                border: '1px solid #ff9441',
+                color: '#000',
+                boxShadow: 'none',
                 px: 4,
                 py: 1.5,
                 fontSize: '1rem',
+                backgroundColor: showMoves
+                  ? pokemon.types.length > 0
+                    ? types[pokemon.types[0]]?.backgroundColor || '#f1f1f1' // Prendre seulement le premier type
+                    : '#f1f1f1'
+                  : '#f1f1f1',
               }}
             >
-              {showMoves ? 'Cacher les Moves' : 'Voir les Moves'}
+              {showMoves ? 'CACHER LES MOVES' : 'VOIR LES MOVES'}
             </Button>
           </Box>
 
@@ -113,12 +163,7 @@ const PokemonDetail = () => {
               </Typography>
               <Box display="flex" flexWrap="wrap" justifyContent="center" gap={1}>
                 {pokemon.moves.map((move, index) => (
-                  <Chip
-                    key={index}
-                    label={move}
-                    color="default"
-                    sx={{ margin: '4px' }}
-                  />
+                  <Chip key={index} label={move} color="default" sx={{ margin: '4px' }} />
                 ))}
               </Box>
             </Box>

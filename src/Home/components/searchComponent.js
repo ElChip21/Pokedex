@@ -1,44 +1,75 @@
-import React, { useState, useEffect } from 'react'
-import { Box, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
-import pokemons from '../../Common/pokemons.json'
-import ListPokemon from './List/ListPokemon'
-import { useLocalContext } from '../../Common/Context/LocalContext'
-import types from '../../Common/types.json'
+import React, { useState, useEffect } from 'react';
+import { Box, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import ListPokemon from './List/ListPokemon';
+import { useLocalContext } from '../../Common/Context/LocalContext';
 
 const SearchComponent = () => {
-  const { currentLanguage } = useLocalContext()
+  const { currentLanguage } = useLocalContext();
 
-  // Récupérer le type et le texte recherché depuis le localStorage
-  const savedSearchTerm = localStorage.getItem('searchTerm') || ''
-  const savedType = localStorage.getItem('selectedType') || ''
+  // State pour les données et les filtres
+  const [pokemons, setPokemons] = useState([]);
+  const [types, setTypes] = useState({});
+  const [filteredPokemons, setFilteredPokemons] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(localStorage.getItem('searchTerm') || '');
+  const [selectedType, setSelectedType] = useState(localStorage.getItem('selectedType') || '');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [filteredPokemons, setFilteredPokemons] = useState(pokemons)
-  const [searchTerm, setSearchTerm] = useState(savedSearchTerm)
-  const [selectedType, setSelectedType] = useState(savedType)
 
   useEffect(() => {
-    // Sauvegarde des valeurs dans le localStorage
-    localStorage.setItem('searchTerm', searchTerm)
-    localStorage.setItem('selectedType', selectedType)
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [pokemonResponse, typesResponse] = await Promise.all([
+          fetch('https://pokedex-jgabriele.vercel.app/pokemons.json'),
+          fetch('https://pokedex-jgabriele.vercel.app/types.json'),   
+        ]);
+        const pokemonData = await pokemonResponse.json();
+        const typesData = await typesResponse.json();
 
-    // Filtrage des Pokémons
-    const filtered = pokemons.filter((pokemon) => {
-      const matchesSearchTerm = pokemon.names[currentLanguage]
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase())
-      const matchesType = selectedType ? pokemon.types.includes(selectedType) : true
-      return matchesSearchTerm && matchesType
-    })
+        setPokemons(pokemonData);
+        setTypes(typesData);
+        setFilteredPokemons(pokemonData); 
+      } catch (err) {
+        console.error('Erreur lors du chargement des données:', err);
+        setError('Impossible de charger les données.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setFilteredPokemons(filtered)
-  }, [searchTerm, currentLanguage, selectedType])
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (pokemons.length > 0) {
+      // Sauvegarde dans le localStorage
+      localStorage.setItem('searchTerm', searchTerm);
+      localStorage.setItem('selectedType', selectedType);
+
+      // Appliquer les filtres
+      const filtered = pokemons.filter((pokemon) => {
+        const matchesSearchTerm = pokemon.names[currentLanguage]
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const matchesType = selectedType ? pokemon.types.includes(selectedType) : true;
+        return matchesSearchTerm && matchesType;
+      });
+
+      setFilteredPokemons(filtered);
+    }
+  }, [searchTerm, currentLanguage, selectedType, pokemons]);
 
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value)
-  }
+    setSearchTerm(event.target.value);
+  };
 
   const handleTypeChange = (event) => {
-    setSelectedType(event.target.value)
+    setSelectedType(event.target.value);
+  };
+
+  if (loading) {
+    return <Box>Chargement en cours...</Box>;
   }
 
   return (
@@ -107,7 +138,7 @@ const SearchComponent = () => {
       {/* Liste des Pokémons filtrés */}
       <ListPokemon filteredPokemons={filteredPokemons} />
     </Box>
-  )
-}
+  );
+};
 
-export default SearchComponent
+export default SearchComponent;
