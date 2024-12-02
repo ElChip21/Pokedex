@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Box, Typography } from '@mui/material'
 import types from '../../../Common/types.json'
 import { Link } from 'react-router-dom'
 import Card from '../card'
-import { useLocalContext } from '../../../Common/Context/LocalContext'
+import { LanguageContext } from '../../../Common/Context/LanguageContext';
 
 const ListPokemon = ({ filteredPokemons }) => {
-  const { currentLanguage } = useLocalContext()
+  const { currentLanguage } = useContext(LanguageContext)
 
   return (
     <Box

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Box, Typography, Card, CardContent, CardMedia, Divider, Chip, Button } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import Badge from '../Home/components/badge'
-import { useLocalContext } from '../Common/Context/LocalContext'
+import { LanguageContext } from '../Common/Context/LanguageContext'
 
 const PokemonDetail = () => {
   const { id } = useParams()
-  const { currentLanguage } = useLocalContext()
+  const { currentLanguage } = useContext(LanguageContext)
   const [pokemon, setPokemon] = useState(null)
   const [types, setTypes] = useState({})
   const [showMoves, setShowMoves] = useState(false)

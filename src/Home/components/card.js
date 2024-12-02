@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Box, Typography } from '@mui/material'
 import Badge from './badge'
-import { useLocalContext } from '../../Common/Context/LocalContext'
+import { LanguageContext } from '../../Common/Context/LanguageContext'
 
 const Card = ({ types, name, image, typesData, identifier }) => {
-  const { currentLanguage } = useLocalContext()
+  const { currentLanguage } = useContext(LanguageContext)
 
   // State pour le chargement de l'image
   const [isLoading, setIsLoading] = useState(true)

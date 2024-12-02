@@ -1,64 +1,59 @@
-import React, { useState, useEffect } from 'react'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
-import { useLocalContext } from '../../Context/LocalContext'
+import React, { useState, useEffect, useContext } from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { LanguageContext } from '../../Context/LanguageContext';
 
 const SelectLanguage = () => {
-  const [availableLanguages, setAvailableLanguages] = useState([])
-  const desiredLanguage = ['fr', 'en', 'de', 'es', 'ja']
+  const [availableLanguages, setAvailableLanguages] = useState([]);
+  const desiredLanguage = ['fr', 'en', 'de', 'es', 'ja'];
 
-  const { currentLanguage, handleLanguageChange } = useLocalContext()
+  const { currentLanguage, setCurrentLanguage } = useContext(LanguageContext); // Utilisation du contexte
 
-  const [pokemons, setPokemons] = useState([])
-  const [setTypes] = useState({})
-  const [setFilteredPokemons] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [pokemons, setPokemons] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
-        // On récupère les données des Pokémons depuis l'API
         const [pokemonResponse] = await Promise.all([
           fetch('https://pokedex-jgabriele.vercel.app/pokemons.json'),
-        ])
+        ]);
 
-        const pokemonData = await pokemonResponse.json()
+        const pokemonData = await pokemonResponse.json();
 
-        setPokemons(pokemonData)
-        setFilteredPokemons(pokemonData) // Initialise le filtrage avec tous les Pokémons
+        setPokemons(pokemonData);
       } catch (err) {
-        console.error('Erreur lors du chargement des données:', err)
-        setError('Impossible de charger les données.')
+        console.error('Erreur lors du chargement des données:', err);
+        setError('Impossible de charger les données.');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
+  // Met à jour les langues disponibles en fonction des pokemons
   useEffect(() => {
-    const languagesSet = new Set() // Permet de ne pas avoir de doublons
+    const languagesSet = new Set();
     pokemons.forEach((pokemon) => {
       Object.keys(pokemon.names).forEach((lang) => {
         if (desiredLanguage.includes(lang)) {
-          languagesSet.add(lang)
+          languagesSet.add(lang);
         }
-      })
-    })
+      });
+    });
 
-    // Conserver seulement les langues dans l'ordre de desiredLanguage
-    const sortedLanguages = desiredLanguage.filter((lang) => languagesSet.has(lang))
-
-    setAvailableLanguages(sortedLanguages)
-  }, [pokemons]) // Ajouter pokemons dans les dépendances
+    const sortedLanguages = desiredLanguage.filter((lang) => languagesSet.has(lang));
+    setAvailableLanguages(sortedLanguages);
+  }, [pokemons]);
 
   const handleChange = (event) => {
-    handleLanguageChange(event.target.value)
-  }
+    setCurrentLanguage(event.target.value);
+  };
 
   return (
     <div>
@@ -110,7 +105,7 @@ const SelectLanguage = () => {
         </Select>
       </FormControl>
     </div>
-  )
-}
+  );
+};
 
-export default SelectLanguage
+export default SelectLanguage;

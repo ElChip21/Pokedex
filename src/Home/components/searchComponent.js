@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Box, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import ListPokemon from './List/ListPokemon';
-import { useLocalContext } from '../../Common/Context/LocalContext';
+import { LanguageContext } from '../../Common/Context/LanguageContext'
 
 const SearchComponent = () => {
-  const { currentLanguage } = useLocalContext();
+  const { currentLanguage } = useContext(LanguageContext);
 
   // State pour les données et les filtres
   const [pokemons, setPokemons] = useState([]);

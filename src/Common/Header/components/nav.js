@@ -1,12 +1,13 @@
-import React from 'react'; 
+import React, { useContext } from 'react'; 
 import logo from './logo.svg';
 import Language from './language';
 import { Link } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { useLocalContext } from '../../Context/LocalContext';
+import { LanguageContext } from '../../Context/LanguageContext'
+
 
 const Nav = () => {
-    const { currentLanguage, handleLanguageChange } = useLocalContext();
+    const { currentLanguage, setCurrentLanguage } = useContext(LanguageContext);
 
     return (
         <Box component="nav" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -14,7 +15,7 @@ const Nav = () => {
                 <Box component="img" src={logo} alt="Logo" height={'60px'} />
             </Link>
             <Box>
-                <Language currentLanguage={currentLanguage} onLanguageChange={handleLanguageChange} />
+                <Language currentLanguage={currentLanguage} onLanguageChange={setCurrentLanguage} />
             </Box>
         </Box>
     );

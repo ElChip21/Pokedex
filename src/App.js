@@ -4,16 +4,9 @@ import Header from './Common/Header/header'
 import {BrowserRouter,Route,Routes} from 'react-router-dom'
 import Home from './Home'
 import PokemonDetail from './Details/pokemonDetails'
-import { useState } from 'react'
-import { LocalProvider } from './Common/Context/LocalContext'
+import { LanguageProvider } from './Common/Context/LanguageContext'
 
 function App() {
-
-  const [currentLanguage, setCurrentLanguage] = useState('fr')
-
-  const handleLanguageChange = (newLanguage) => {
-    setCurrentLanguage(newLanguage) // Mettre à jour la langue
-  }
 
   return (
     <>
@@ -29,7 +22,7 @@ function App() {
         }}
       />
       {/* Fournir le contexte pour la langue */}
-      <LocalProvider value={{ currentLanguage, handleLanguageChange }}>
+      <LanguageProvider >
         <Box>
           <Header />
             <Routes>
@@ -37,7 +30,7 @@ function App() {
               <Route path="pokemon/:id" element={<PokemonDetail />} />            
             </Routes>
         </Box>
-      </LocalProvider>
+      </LanguageProvider>
       </BrowserRouter>
     </>
   )
