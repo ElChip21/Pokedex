@@ -112,10 +112,10 @@ const SearchComponent = () => {
                 borderColor: 'white',
               },
               '&:hover fieldset': {
-                borderColor: 'rgb(255,148,65)',
+                borderColor: 'white',
               },
               '&.Mui-focused fieldset': {
-                borderColor: 'rgb(255,148,65)',
+                borderColor: 'white',
               },
             },
             '& .MuiInputLabel-root': {
